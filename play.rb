@@ -8,6 +8,10 @@ class Location
   def add_link(direction, link)
     @nodes[direction] = link
   end
+
+  def get_link(direction)
+    @nodes[direction]
+  end
   
   def title
     @title
@@ -22,6 +26,14 @@ class Link
   def initialize(text, destination)
     @text = text
     @destination = destination
+  end
+
+  def destination
+    @destination
+  end
+
+  def text
+    @text
   end
 end
 
@@ -40,29 +52,43 @@ def print_desc(location)
   puts location.description
 end
 
+actions = [:quit, :move]
+directions = [:north, :south, :east, :west]
+playing = true
+
 def parse_action
   print "What is your next move? "
-  action = gets.chomp
-  action.to_sym
+  gets.chomp.split(" ").map { |word| word.to_sym }
 end
-
-actions = [:quit]
-playing = true
 
 while(playing)
   puts ""
   if current_location != last_location
     print_desc current_location
-    current_location = last_location
+    last_location = current_location
   end
   action = parse_action
-  case action
+  case action[0]
     when :quit
       playing = false
       puts "Thanks for playing."
-  else
-    puts "I don't understand that action. Try one of these:"
-    actions.each { |a| puts a.to_s }
+    when :move
+      direction = action[1]
+      unless direction
+        puts "Please specify a direction: "
+	directions.each { |dir| puts dir.to_s }
+      else
+        link = current_location.get_link(direction)
+        unless link
+          puts "There's nothing that direction"
+        else
+          puts link.text
+          current_location = link.destination
+        end
+      end
+    else
+      puts "I don't understand that action. Try one of these:"
+      actions.each_key { |a| puts a.to_s }
   end
 end
     
