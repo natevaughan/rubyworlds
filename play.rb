@@ -1,49 +1,13 @@
-class Location
-  def initialize(title, description)
-    @title = title
-    @description = description
-    @nodes = Hash.new
-  end
-  
-  def add_link(direction, link)
-    @nodes[direction] = link
-  end
+require "./model/link.rb"
+require "./model/location.rb"
 
-  def get_link(direction)
-    @nodes[direction]
-  end
-  
-  def title
-    @title
-  end
-
-  def description
-    @description
-  end
-end
-
-class Link
-  def initialize(text, destination)
-    @text = text
-    @destination = destination
-  end
-
-  def destination
-    @destination
-  end
-
-  def text
-    @text
-  end
-end
-
-start = Location.new("Cave entrance", "You find yourself in a dimly-lit open space with a dirt floor and a single shaft of light coming from above. To the north, you can see light coming through a narrow passage.")
-
+entrance = Location.new("Cave entrance", "You find yourself in a dimly-lit open space with a dirt floor and a single shaft of light coming from above. To the north, you can see light coming through a narrow passage.")
 banquet_hall = Location.new("Banquet hall", "A large room opens before you, with a long wooden table and many scattered chairs, all in disrepair. To the west is a wooden door.")
 
-start.add_link(:north, Link.new("You squeeze through the narrow opening.", banquet_hall))
+entrance.add_link(:north, Link.new("You squeeze through the narrow opening.", banquet_hall))
+banquet_hall.add_link(:south, Link.new("You return through the narrow opening.", entrance))
 
-current_location = start
+current_location = entrance
 last_location = nil
 
 def print_desc(location)
